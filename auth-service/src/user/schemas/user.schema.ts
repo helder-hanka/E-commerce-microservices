@@ -1,10 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { IsInt, Min, Max } from 'class-validator';
+
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  SELL = 'SELL',
+}
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+  _id: Types.ObjectId;
   @Prop({ required: true, unique: true })
   email: string;
 
@@ -18,6 +26,9 @@ export class User {
   lastName: string;
 
   @Prop()
+  @IsInt()
+  @Min(0)
+  @Max(100)
   age: number;
 
   @Prop()
@@ -35,8 +46,8 @@ export class User {
   @Prop()
   country: string;
 
-  @Prop({ type: [String], default: ['user'] })
-  roles: string[];
+  @Prop({ type: [String], enum: UserRole, default: [UserRole.USER] })
+  roles: UserRole[];
 
   @Prop({ default: false })
   isEmailVerified: boolean;
