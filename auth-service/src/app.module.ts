@@ -6,21 +6,24 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import Joi from 'joi';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      // envFilePath: join(__dirname, '../../.env'),
       validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().required,
-        JWT_SECRET: Joi.string().required,
-        PORT: Joi.string().required,
-        EMAIL_HOST: Joi.string().required,
-        EMAIL_PORT: Joi.string().required,
-        EMAIL_USER: Joi.string().required,
-        EMAIL_PASS: Joi.string().required,
-        EMAIL_FROM: Joi.string().required,
-        APP_URL: Joi.string().required,
+        MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
+        // PORT: Joi.string().required(),
+        EMAIL_HOST: Joi.string().required(),
+        EMAIL_PORT: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASS: Joi.string().required(),
+        EMAIL_FROM: Joi.string().required(),
+        APP_URL: Joi.string().required(),
       }),
     }),
     MongooseModule.forRootAsync({

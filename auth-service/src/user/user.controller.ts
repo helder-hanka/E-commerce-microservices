@@ -17,7 +17,7 @@ import { UpdateRolesDto } from './dto/update-roles.dto';
 
 @Controller('profile')
 export class UserController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthGuard('jwt')) // Protège l'accès, nécessite un JWT valide
   @Get('profile')
