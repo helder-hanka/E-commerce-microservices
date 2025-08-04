@@ -8,6 +8,7 @@ import {
   Req,
   Param,
   ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,6 +27,9 @@ export class AuthController {
 
   @Get('verify-email')
   async verifyEmail(@Query('token') token: string) {
+    if (!token) {
+      throw new BadRequestException('Verification token is required');
+    }
     return this.authService.verifyEmail(token);
   }
 
