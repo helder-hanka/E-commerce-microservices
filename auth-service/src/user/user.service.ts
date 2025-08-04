@@ -36,10 +36,7 @@ export class UserService {
     return updatedUser;
   }
 
-  async updateVerificationToken(
-    userId: string,
-    token: string | null,
-  ): Promise<User> {
+  async updateVerificationToken(userId: string, token: string): Promise<User> {
     const updatedUser = await this.userModel
       .findByIdAndUpdate(userId, { verificationToken: token })
       .exec();
@@ -54,7 +51,7 @@ export class UserService {
     const updateEmailAsVerified = await this.userModel
       .findByIdAndUpdate(
         userId,
-        { isEmailVerified: true, verificationToken: null },
+        { isEmailVerified: true, $unset: { verificationToken: '' } },
         { new: true },
       )
       .exec();
@@ -66,7 +63,15 @@ export class UserService {
   }
 
   async findByVerifiedToken(token: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ verificationToken: token }).exec();
+    const user = await this.userModel
+      .findOne({ verificationToken: token })
+      .exec();
+    if (!user) {
+      throw new NotFoundException(
+        'User with this verification token not found',
+      );
+    }
+    return user;
   }
 
   async updateRoles(
