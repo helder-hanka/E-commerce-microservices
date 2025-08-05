@@ -11,8 +11,9 @@ import * as bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { MailService } from '../shared/mail.service';
 import { ConfigService } from '@nestjs/config';
-import { UserDocument, UserRole } from 'src/user/schemas/user.schema';
+import { User, UserDocument, UserRole } from 'src/user/schemas/user.schema';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
+import { CreateProfileDto } from 'src/user/dto/createProfile.dto';
 
 @Injectable()
 export class AuthService {
@@ -88,7 +89,7 @@ export class AuthService {
     };
   }
 
-  async getProfile(userId: string) {
+  async getProfile(userId: string): Promise<object> {
     const user = await this.userService.findById(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -97,8 +98,22 @@ export class AuthService {
     return result;
   }
 
-  async updateProfile(userId: string, updateProfileDto: any) {
-    return this.userService.update;
+  async createUpdateProfile(
+    userId: string,
+    createProfileDto: CreateProfileDto,
+  ): Promise<UserDocument> {
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const createdUser = await this.userService.update(userId, createProfileDto);
+    if (!createdUser) {
+      throw new NotFoundException('Failed to create profile');
+    }
+    // Caster l'objet en 'any' pour accéder à la méthode toObject()
+    const userObject = (createdUser as any).toObject();
+    const { password, verificationToken, ...result } = userObject; // Exclut les champs sensibles
+    return result;
   }
 
   async updateRoles(
