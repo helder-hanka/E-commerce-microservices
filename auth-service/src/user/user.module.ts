@@ -15,13 +15,3 @@ import { AuthModule } from 'src/auth/auth.module';
   exports: [UserService],
 })
 export class UserModule {}
-
-// @Module({
-//   imports: [
-//     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-//   ],
-//   providers: [UserService],
-//   controllers: [UserController],
-//   exports: [UserService],
-// })
-// export class UserModule {}
