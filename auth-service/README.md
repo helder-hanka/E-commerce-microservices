@@ -37,6 +37,9 @@ $ npm install
 # development
 $ npm run start
 
+#With Nodemon
+$ npm run start:nodemon
+
 # watch mode
 $ npm run start:dev
 
