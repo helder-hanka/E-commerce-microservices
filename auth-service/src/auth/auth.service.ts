@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MailService } from '../shared/mail.service';
 import { ConfigService } from '@nestjs/config';
 import { UserDocument, UserRole } from 'src/user/schemas/user.schema';
+import { CreateUserDto } from 'src/user/dto/createUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
   ) {}
-  async signUp(createUserDto: any): Promise<{ message: string }> {
+  async signUp(createUserDto: CreateUserDto): Promise<{ message: string }> {
     const existingUser = await this.userService.findByEmail(
       createUserDto.email,
     );
@@ -65,7 +66,9 @@ export class AuthService {
     return { message: 'Email verified successfully! You can now log in.' };
   }
 
-  async login(loginDto: any): Promise<{ accessToken: string }> {
+  async login(
+    loginDto: any,
+  ): Promise<{ accessToken: string; userId: string; roles: UserRole[] }> {
     const user = await this.userService.findByEmail(loginDto.email);
     if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
@@ -80,6 +83,8 @@ export class AuthService {
     const payload = { email: user.email, sub: user._id, roles: user.roles };
     return {
       accessToken: this.jwtService.sign(payload),
+      userId: user._id.toString(),
+      roles: user.roles,
     };
   }
 

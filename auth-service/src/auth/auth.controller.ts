@@ -9,19 +9,22 @@ import {
   Param,
   ValidationPipe,
   BadRequestException,
+  UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
 import { UpdateRolesDto } from 'src/user/dto/update-roles.dto';
+import { CreateUserDto } from 'src/user/dto/createUser.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
-  async signUp(@Body() createUserDto: any) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async signUp(@Body() createUserDto: CreateUserDto) {
     return this.authService.signUp(createUserDto);
   }
 
