@@ -71,6 +71,31 @@ $ npm install -g @nestjs/mau
 $ mau deploy
 ```
 
+## Project Structure (Overview)
+
+auth-service/
+├── src/
+│ ├── main.ts # Point d'entrée de l'application
+│ ├── app.module.ts # Module racine
+│ ├── auth/ # Module d'authentification
+│ │ ├── auth.controller.ts # Gère les requêtes HTTP (sign-up, login)
+│ │ ├── auth.service.ts # Logique métier (hachage, JWT, DB)
+│ │ ├── auth.module.ts # Module spécifique à l'auth
+│ │ └── jwt.strategy.ts # Stratégie de validation JWT
+│ ├── user/ # Module utilisateur (profil, rôles)
+│ │ ├── user.controller.ts
+│ │ ├── user.service.ts
+│ │ ├── user.module.ts
+│ │ └── schemas/
+│ │ └── user.schema.ts # Schéma Mongoose pour l'utilisateur
+│ ├── config/ # Fichiers de configuration (JWT secret, DB URL, Email)
+│ │ └── configuration.ts
+│ └── shared/ # Utilitaires partagés (ex: envoi d'emails)
+│ └── mail.service.ts
+├── Dockerfile # Pour conteneuriser l'application
+├── package.json # Dépendances et scripts
+└── tsconfig.json
+
 With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
 ## Resources
