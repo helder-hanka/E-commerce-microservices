@@ -35,16 +35,19 @@ export class User {
   address: string;
 
   @Prop()
-  phoneNumber: string;
+  phone: string;
 
   @Prop()
-  PostalCode: string;
+  postalCode: string;
 
   @Prop()
   city: string;
 
   @Prop()
   country: string;
+
+  @Prop()
+  avatar: string;
 
   @Prop({ type: [String], enum: UserRole, default: [UserRole.USER] })
   roles: UserRole[];
